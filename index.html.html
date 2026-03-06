@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Class Schedule and Student Grades</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #1a2744;
+      --gold: #b8972a;
+      --white: #ffffff;
+      --bg: #f5f3ee;
+      --border: #ddd8cc;
+      --text: #2d2d2d;
+      --muted: #374151;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color:#fbfeaf;
+      font-family: 'Source Sans 3', sans-serif;
+      color: var(--text);
+      padding: 2rem;
+    }
+
+    /* ── CARDS GRID ── */
+    .list-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 2rem;
+    }
+
+    .list-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 26px 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .list-card h2 {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 1rem;
+      padding-left: 12px;
+      border-left: 4px solid var(--gold);
+    }
+
+    /* ── GRADING EQUIVALENT — two-column bullet list ── */
+    .grading-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 16px;
+    }
+
+    .grading-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 2;
+    }
+
+    .grading-list li::before {
+      content: "•";
+      color: var(--gold);
+      font-size: 1.3em;
+      line-height: 1;
+      min-width: 14px;
+    }
+
+    /* ── ENROLLED SUBJECTS — numbered list ── */
+    .subject-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: subject-counter;
+    }
+
+    .subject-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 2.2;
+      counter-increment: subject-counter;
+    }
+
+    .subject-list li::before {
+      content: counter(subject-counter) ".";
+      font-weight: 700;
+      color: var(--navy);
+      min-width: 20px;
+      font-size: 0.88rem;
+    }
+
+    /* ── SECTION HEADER TABLES ── */
+    .section-header {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0 0 0;
+    }
+
+    .section-header th {
+      padding: 10px 16px;
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-align: left;
+      color: var(--navy);
+      border: none;
+    }
+
+    .section-header.schedule th { background-color: #4cf74c; color: #fff; }
+    .section-header.grades-pink th { background-color: #e8b4b8; color: var(--navy); }
+    .section-header.grades-blue th { background-color: #b0d4e3; color: var(--navy); }
+
+    /* ── MAIN DATA TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    }
+
+    .data-table th {
+      background-color: var(--navy);
+      color: var(--white);
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px 12px;
+      text-align: center;
+      border: 1px solid #2f3f60;
+      letter-spacing: 0.03em;
+    }
+
+    .data-table td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    .data-table tr:nth-child(even) td { background-color: #faf9f6; }
+    .data-table tr:hover td { background-color: #f0ede5; transition: background 0.15s; }
+
+    .data-table tfoot td {
+      background-color: var(--navy);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.88rem;
+      border-color: #2f3f60;
+    }
+
+    /* ── STUDENT INFO BLOCK ── */
+    .student-info {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 4px;
+      font-size: 0.92rem;
+    }
+
+    .student-info p { margin: 3px 0; color: var(--navy); font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <!-- ── TOP CARDS ── -->
+  <div class="list-grid">
+    <div class="list-card">
+      <h2>Grading Equivalent</h2>
+      <ul class="grading-list">
+        <li>1.0 → 95–100</li>
+        <li>1.1 → 94</li>
+        <li>1.2 → 93</li>
+        <li>1.3 → 92</li>
+        <li>1.4 → 91</li>
+        <li>1.5 → 90</li>
+        <li>1.6 → 89</li>
+        <li>1.7 → 88</li>
+        <li>1.8 → 87</li>
+        <li>1.9 → 86</li>
+        <li>2.0 → 85</li>
+        <li>2.1 → 84</li>
+        <li>2.2 → 83</li>
+        <li>2.3 → 82</li>
+        <li>2.4 → 81</li>
+        <li>2.5 → 80</li>
+        <li>2.6 → 79</li>
+        <li>2.7 → 78</li>
+        <li>2.8 → 77</li>
+        <li>2.9 → 76</li>
+        <li>3.0 → 75</li>
+        <li>5.0 → 74 below</li>
+      </ul>
+    </div>
+
+    <div class="list-card">
+      <h2>First Year Second Semester Enrolled Subjects</h2>
+      <ol class="subject-list">
+        <li>Web Development</li>
+        <li>Computer Programming 2</li>
+        <li>Basic Electronics</li>
+        <li>National Service Training Program 2</li>
+        <li>Exercise-Based Fitness Activities</li>
+        <li>Purposive Communication</li>
+        <li>Panitikan ng Pilipinas</li>
+        <li>Discrete Structures</li>
+        <li>Readings in Philippine History</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ── CLASS SCHEDULE ── -->
+  <table class="section-header schedule">
+    <tr><th>CLASS SCHEDULE</th></tr>
+  </table>
+
+  <table class="data-table">
+    <tr>
+      <th>Subject Code</th>
+      <th>Descriptive Title</th>
+      <th>Time</th>
+      <th>Day/s</th>
+      <th>Set A Room</th>
+      <th>Set B Room</th>
+      <th>Units</th>
+      <th>Instructor</th>
+    </tr>
+    <tr><td>WEB</td><td>Web Development</td><td>7:00 – 8:00 AM</td><td>MWF</td><td>LAB 1</td><td>ONLINE</td><td>3</td><td>B. Empaces</td></tr>
+    <tr><td>GE 4</td><td>Purposive Communication</td><td>2:00 – 3:00 PM</td><td>MWF</td><td>402</td><td>ONLINE</td><td>3</td><td>C. Blasco</td></tr>
+    <tr><td>PROG 2</td><td>Computer Programming 2</td><td>8:00 – 9:00 AM</td><td>MWF</td><td>LAB 1</td><td>ONLINE</td><td>3</td><td>I. Eda</td></tr>
+    <tr><td>BASIC ELECT</td><td>Basic Electronics</td><td>9:00 – 10:00 AM</td><td>MWF</td><td>LAB 3</td><td>ONLINE</td><td>3</td><td>T. Comayas Jr.</td></tr>
+    <tr><td>PATHFIT 2</td><td>Exercise-Based Fitness Activities</td><td>1:00 – 2:00 PM</td><td>MW</td><td>302</td><td>ONLINE</td><td>2</td><td>J. Paquibot</td></tr>
+    <tr><td>NSTP 2</td><td>National Service Training Program 2</td><td>12:00 – 1:00 PM</td><td>MWF</td><td>402</td><td>ONLINE</td><td>3</td><td>L. Paquibot</td></tr>
+    <tr><td>GE 3</td><td>Readings in Philippine History</td><td>7:00 – 8:30 AM</td><td>TTH</td><td>202</td><td>ONLINE</td><td>3</td><td>D. Inoc</td></tr>
+    <tr><td>FIL 2</td><td>Panitikan ng Pilipinas</td><td>10:00 – 11:30 AM</td><td>TTH</td><td>203</td><td>ONLINE</td><td>3</td><td>E. Ando</td></tr>
+    <tr><td>DISCRETE 1</td><td>Discrete Structures</td><td>8:30 – 10:00 AM</td><td>TTH</td><td>203</td><td>ONLINE</td><td>3</td><td>E. Dinoy</td></tr>
+  </table>
+
+  <!-- ── STUDENT 1 GRADES ── -->
+  <table class="section-header grades-pink">
+    <tr><th>STUDENTS' GRADE</th></tr>
+  </table>
+
+  <div class="student-info">
+    <div>
+      <p>Name: RYZEL JUNE ARO JUMAO-AS</p>
+      <p>Student ID Number: 20250361</p>
+    </div>
+    <div>
+      <p>Course &amp; Year: BSIT – 1C</p>
+      <p>Term &amp; Academic Year: 1st Sem A.Y 2025–2026</p>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <tr>
+      <th>Descriptive Title</th>
+      <th>Final Grade</th>
+      <th>Units Enrolled</th>
+      <th>Units Earned</th>
+      <th>Remarks</th>
+      <th>Instructor</th>
+    </tr>
+    <tr><td>Sining ng Komunikasyon</td><td>1.4</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Emmanuel Ando</td></tr>
+    <tr><td>Mathematics in the Modern World</td><td>1.0</td><td>3</td><td>3</td><td>Passed</td><td>Ms. Jenysel Cadungog</td></tr>
+    <tr><td>Understanding the Self</td><td>1.2</td><td>3</td><td>3</td><td>Passed</td><td>Ms. Mariz Yagong</td></tr>
+    <tr><td>National Service Training Program 1</td><td>1.4</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Leo Francis James Paquibot</td></tr>
+    <tr><td>Movement Competency Training</td><td>1.2</td><td>2</td><td>2</td><td>Passed</td><td>Ms. Charisma Andales</td></tr>
+    <tr><td>Computer Programming 1</td><td>1.3</td><td>3</td><td>3</td><td>Passed</td><td>Ms. Irene Eda</td></tr>
+    <tr><td>Office Productivity Tools</td><td>1.4</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Lourenze Leonizo</td></tr>
+    <tr><td>Pre-Calculus for Non-STEM (Algebra and Trigo)</td><td>1.4</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Jordan Yagong</td></tr>
+    <tr><td>Introduction to Computing</td><td>1.1</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Bernie Empaces</td></tr>
+    <tfoot>
+      <tr>
+        <td colspan="2">Total Units</td>
+        <td>26</td>
+        <td>26</td>
+        <td colspan="2">Semesteral Average: 1.25</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- ── STUDENT 2 GRADES ── -->
+  <table class="section-header grades-blue">
+    <tr><th>STUDENTS' GRADE</th></tr>
+  </table>
+
+  <div class="student-info">
+    <div>
+      <p>Name: KATHLENE CENTILLAS MANAYON</p>
+      <p>Student ID Number: 20250538</p>
+    </div>
+    <div>
+      <p>Course &amp; Year: BSIT – 1C</p>
+      <p>Term &amp; Academic Year: 1st Sem A.Y 2025–2026</p>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <tr>
+      <th>Descriptive Title</th>
+      <th>Final Grade</th>
+      <th>Units Enrolled</th>
+      <th>Units Earned</th>
+      <th>Remarks</th>
+      <th>Instructor</th>
+    </tr>
+    <tr><td>Sining ng Komunikasyon</td><td>1.8</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Emmanuel Ando</td></tr>
+    <tr><td>Mathematics in the Modern World</td><td>1.2</td><td>3</td><td>3</td><td>Passed</td><td>Ms. Jenysel Cadungog</td></tr>
+    <tr><td>Understanding the Self</td><td>1.7</td><td>3</td><td>3</td><td>Passed</td><td>Ms. Mariz Yagong</td></tr>
+    <tr><td>National Service Training Program 1</td><td>1.6</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Leo Francis James Paquibot</td></tr>
+    <tr><td>Movement Competency Training Program</td><td>1.5</td><td>2</td><td>2</td><td>Passed</td><td>Ms. Charisma Andales</td></tr>
+    <tr><td>Computer Programming 1</td><td>1.9</td><td>3</td><td>3</td><td>Passed</td><td>Ms. Irene Eda</td></tr>
+    <tr><td>Office Productivity Tools</td><td>1.9</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Lourenze Leonizo</td></tr>
+    <tr><td>Pre-Calculus for Non-STEM (Algebra and Trigo)</td><td>1.8</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Jordan Yagong</td></tr>
+    <tr><td>Introduction to Computing</td><td>1.8</td><td>3</td><td>3</td><td>Passed</td><td>Mr. Bernie Empaces</td></tr>
+    <tfoot>
+      <tr>
+        <td colspan="2">Total Units</td>
+        <td>26</td>
+        <td>26</td>
+        <td colspan="2">Semesteral Average: 1.70</td>
+      </tr>
+    </tfoot>
+  </table>
+
+</body>
+</html>
